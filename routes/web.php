@@ -1,15 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+Route::get('dashboard',function(){
+    $users=User::where('id','!=',auth('web')->user()->id)->get();
+    return view('dashboard',[
+        'users'=>$users
+    ]);
+})->middleware(['auth', 'verified'])
     ->name('dashboard');
-Route::get('chat', function(){
-    return view('livewire.gchatapp');
-});
+Route::get('/chat', function(){
+    return view('livewire.chatapp',[
+        // 'id'=>$id
+
+    ]);
+})->name('chat');
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
